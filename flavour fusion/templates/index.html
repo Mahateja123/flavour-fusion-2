@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flavour Fusion AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .flavour-fusion-heading {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            font-size: 2em;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="flavour-fusion-heading">Flavour Fusion</h1>
+
+    <h2>Enter Two Dishes to Create a Unique Fusion</h2>
+    <form id="fusionForm">
+        <input type="text" id="dish1" name="dish1" placeholder="Enter first dish" required>
+        <input type="text" id="dish2" name="dish2" placeholder="Enter second dish" required>
+        <input type="number" id="wordCount" name="word_count" placeholder="Enter word count" required>
+        <input type="file" id="imageUpload" name="image">
+        <button type="submit">Generate Fusion</button>
+    </form>
+
+    <h3>Generated Content:</h3>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById("fusionForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(this);
+            document.getElementById("result").innerText = "Generating fusion... Please wait!";
+
+            fetch("/generate", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("result").innerText = data.generated_content || "Error generating content.";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("result").innerText = "An error occurred.";
+                });
+        });
+    </script>
+</body>
+</html>
